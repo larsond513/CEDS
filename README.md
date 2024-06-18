@@ -29,6 +29,7 @@ The study focused on `Blood Pressure` and `Coping Strategies`.
 <img width="543" alt="image" src="https://github.com/larsond513/CEDS/assets/120323717/561b161b-3ef8-431c-a890-3a9b9e62a56b">
 
 
+
 ## Usage
 The script described below is named `LDA.md`. Processed data files will be saved to the `Data/OutFiles` folder. Figures will be saved in the `Figure` folder. We have broken down processing into 3 stages, outlined below.
 
@@ -81,6 +82,11 @@ The script described below is named `LDA.md`. Processed data files will be saved
 |CCSC26|act12|
 
 </details>
+
+### Data Exploration
+The changes in Blood Pressure across time after the stress-inducing task
+
+<img src="Figures/raincloud_plot.png" alt="Raincloud Plot" width="500" height="300">
 
 ### Model Assumption Testing 
 
