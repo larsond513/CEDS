@@ -122,6 +122,7 @@ all_data$supportive_coping <- rowMeans(all_data[, supportive_items], na.rm = TRU
 ```
 
 # Data exploration
+## Blood pressure recovery 
 ```{r}
 exploration <- all_data %>%
   select(starting_cortisol, t3, t4, t5, t6, BP3Time, BP4Time, BP5Time, PulseAv3, PulseAv4, PulseAv5, int_both, mdd_both, ID, supportive_coping, distracting_coping, active_coping, avoidant_coping, fin_hardship, ext_both)
@@ -135,7 +136,7 @@ exploration_BP <- exploration %>%
 plot_raincloud(exploration_BP, BP, groups = time)
 ```
 
-
+## Cortisol recovery
 ```{r}
 exploration_cortisol <- exploration %>%
   pivot_longer(
@@ -144,28 +145,17 @@ exploration_cortisol <- exploration %>%
     values_to = "cortisol")
 
 plot_raincloud(exploration_cortisol, cortisol, groups = time)
-
-
-lm <- lm(cortisol ~ time + starting_cortisol, data=exploration_cortisol)
-exploration_cortisol$time <- as.factor(exploration_cortisol$time)
-summary(lm)
-
-mod1 <- afex::mixed(cortisol ~ time * distraction_coping + (1|ID), set_data_arg = TRUE, data=exploration_cortisol)
-summary(mod1)
 ```
 
-
+## Heart rate recovery
 ```{r}
 exploration_HR <- exploration %>%
   pivot_longer(
     cols = starts_with("PulseAv"),
     names_to = "time",
     values_to = "HR")
-```
 
-
-```{r}
-plot_raincloud(mod1_long, BP, groups = time)
+plot_raincloud(exploration_HR, HR, groups = time)
 ```
 
 # Statistical analysis 
