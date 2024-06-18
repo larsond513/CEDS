@@ -91,7 +91,8 @@ all_data <- all_data %>%
     t3 = Saliva3Time,
     t4 = Saliva4Time,
     t5 = Saliva5Time, 
-    t6 = Saliva6Time
+    t6 = Saliva6Time,
+    starting_BP = BP1Time
   )
 ```
 
@@ -125,7 +126,7 @@ all_data$supportive_coping <- rowMeans(all_data[, supportive_items], na.rm = TRU
 ## Blood pressure recovery 
 ```{r}
 exploration <- all_data %>%
-  select(starting_cortisol, t3, t4, t5, t6, BP3Time, BP4Time, BP5Time, PulseAv3, PulseAv4, PulseAv5, int_both, mdd_both, ID, supportive_coping, distracting_coping, active_coping, avoidant_coping, fin_hardship, ext_both)
+  select(starting_cortisol, t3, t4, t5, t6, starting_BP, BP3Time, BP4Time, BP5Time, PulseAv3, PulseAv4, PulseAv5, int_both, mdd_both, ID, supportive_coping, distracting_coping, active_coping, avoidant_coping, fin_hardship, ext_both)
 
 exploration_BP <- exploration %>%
   pivot_longer(
@@ -159,39 +160,45 @@ plot_raincloud(exploration_HR, HR, groups = time)
 ```
 
 # Statistical analysis 
-## Cortisol and internalising symptoms
-### Convert dataset to vertical
+## Filtering out outliers
 ```{r}
-#mod1_data <- all_data %>%
-  #select(BP1Time, BP2Time, BP3Time, BP4Time, BP5Time, int_both, mdd_both, mdd_cutoff, ID, supportive_coping, distracting_coping, active_coping, avoidant_coping, fin_hardship, ses)
+# Blood pressure 
+Q1_1 <- quantile(exploration$BP3Time, probs=c(.25, .75), na.rm = TRUE)
+iqr1 <- IQR(exploration$BP3Time, na.rm = TRUE)
+excluded_BP <- subset(exploration, exploration$BP3Time > (Q1_1[1] - 1.5*iqr1) & exploration$BP3Time < (Q1_1[2]+1.5*iqr1))
 
-Q1_1 <- quantile(mod1_data$BP3Time, probs=c(.25, .75), na.rm = TRUE)
-iqr1 <- IQR(mod1_data$BP3Time, na.rm = TRUE)
-excluded_data <- subset(mod1_data, mod1_data$BP3Time > (Q1_1[1] - 1.5*iqr1) & mod1_data$BP3Time < (Q1_1[2]+1.5*iqr1))
+Q1_2 <- quantile(exploration$BP4Time, probs=c(.25, .75), na.rm = TRUE)
+iqr2 <- IQR(exploration$BP4Time, na.rm = TRUE)
+excluded_BP <- subset(exploration, exploration$BP4Time > (Q1_2[1] - 1.5*iqr2) & exploration$BP4Time < (Q1_2[2]+1.5*iqr2))
 
-Q1_2 <- quantile(mod1_data$BP4Time, probs=c(.25, .75), na.rm = TRUE)
-iqr2 <- IQR(mod1_data$BP4Time, na.rm = TRUE)
-excluded_data <- subset(mod1_data, mod1_data$BP4Time > (Q1_2[1] - 1.5*iqr2) & mod1_data$BP4Time < (Q1_2[2]+1.5*iqr2))
+Q1_3 <- quantile(exploration$BP4Time, probs=c(.25, .75), na.rm = TRUE)
+iqr3 <- IQR(exploration$BP4Time, na.rm = TRUE)
+excluded_BP <- subset(exploration, exploration$BP4Time > (Q1_3[1] - 1.5*iqr3) & exploration$BP4Time < (Q1_3[2]+1.5*iqr3))
 
-Q1_3 <- quantile(mod1_data$BP4Time, probs=c(.25, .75), na.rm = TRUE)
-iqr3 <- IQR(mod1_data$BP4Time, na.rm = TRUE)
-excluded_data <- subset(mod1_data, mod1_data$BP4Time > (Q1_3[1] - 1.5*iqr3) & mod1_data$BP4Time < (Q1_3[2]+1.5*iqr3))
+Q1_4 <- quantile(exploration$starting_BP, probs=c(.25, .75), na.rm = TRUE)
+iqr4 <- IQR(exploration$BP4Time, na.rm = TRUE)
+excluded_BP <- subset(exploration, exploration$BP4Time > (Q1_4[1] - 1.5*iqr4) & exploration$BP4Time < (Q1_4[2]+1.5*iqr4))
 
-mod1_data <- all_data %>%
-  select(BP3Time, BP4Time, BP5Time, int_both, mdd_both, ID, supportive_coping, distracting_coping, active_coping, avoidant_coping, fin_hardship, ext_both)
+# Cortisol
+Q1_1 <- quantile(exploration$starting_cortisol, probs=c(.25, .75), na.rm = TRUE)
+iqr1 <- IQR(exploration$starting_cortisol, na.rm = TRUE)
+excluded_cortisol <- subset(exploration, exploration$starting_cortisol > (Q1_1[1] - 1.5*iqr1) & exploration$starting_cortisol < (Q1_1[2]+1.5*iqr1))
 
-Q1_1 <- quantile(mod1_data$BP3Time, probs=c(.25, .75), na.rm = TRUE)
-iqr1 <- IQR(mod1_data$BP3Time, na.rm = TRUE)
-excluded_data <- subset(mod1_data, mod1_data$BP3Time > (Q1_1[1] - 1.5*iqr1) & mod1_data$BP3Time < (Q1_1[2]+1.5*iqr1))
+Q1_2 <- quantile(exploration$t3, probs=c(.25, .75), na.rm = TRUE)
+iqr2 <- IQR(exploration$t3, na.rm = TRUE)
+excluded_cortisol <- subset(exploration, exploration$t3 > (Q1_2[1] - 1.5*iqr2) & exploration$t3 < (Q1_2[2]+1.5*iqr2))
 
-Q1_2 <- quantile(mod1_data$BP4Time, probs=c(.25, .75), na.rm = TRUE)
-iqr2 <- IQR(mod1_data$BP4Time, na.rm = TRUE)
-excluded_data <- subset(mod1_data, mod1_data$BP4Time > (Q1_2[1] - 1.5*iqr2) & mod1_data$BP4Time < (Q1_2[2]+1.5*iqr2))
+Q1_3 <- quantile(exploration$t4, probs=c(.25, .75), na.rm = TRUE)
+iqr3 <- IQR(exploration$t4, na.rm = TRUE)
+excluded_cortisol <- subset(exploration, exploration$t4 > (Q1_3[1] - 1.5*iqr3) & exploration$t4 < (Q1_3[2]+1.5*iqr3))
 
-Q1_3 <- quantile(mod1_data$BP4Time, probs=c(.25, .75), na.rm = TRUE)
-iqr3 <- IQR(mod1_data$BP4Time, na.rm = TRUE)
-excluded_data <- subset(mod1_data, mod1_data$BP4Time > (Q1_3[1] - 1.5*iqr3) & mod1_data$BP4Time < (Q1_3[2]+1.5*iqr3))
+Q1_4 <- quantile(exploration$t5, probs=c(.25, .75), na.rm = TRUE)
+iqr4 <- IQR(exploration$t5, na.rm = TRUE)
+excluded_cortisol <- subset(exploration, exploration$t5 > (Q1_4[1] - 1.5*iqr4) & exploration$t5 < (Q1_4[2]+1.5*iqr4))
+```
 
+
+```{r}
 mod1_long <- excluded_data %>%
   pivot_longer(
     cols = starts_with("BP"),
