@@ -156,7 +156,7 @@ exploration_cortisol <- exploration %>%
     names_to = "time",
     values_to = "cortisol")
 
-raincloud_Cor <- plot_raincloud(exploration_BP, BP, groups = time)
+raincloud_Cor <- plot_raincloud(exploration_cortisol, cortisol, groups = time)
 
 # Define the relative path to the 'Figure' directory
 output_path <- "Figure/raincloud_Cor.png"
@@ -174,7 +174,7 @@ exploration_HR <- exploration %>%
     names_to = "time",
     values_to = "HR")
 
-raincloud_HR <- plot_raincloud(exploration_BP, BP, groups = time)
+raincloud_HR <- plot_raincloud(exploration_HR, HR, groups = time)
 
 output_path <- "Figure/raincloud_HR.png"
 
