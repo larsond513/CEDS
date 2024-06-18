@@ -29,8 +29,7 @@ library(tidyr)
 library(sdamr)
 library(lavaan)
 
-setwd("~/Documents/rstudio/CEDS")
-CEDS <- read.csv("Data/CEDS.csv")
+CEDS <- read.csv("CEDS.csv")
 
 all_data <- CEDS %>%
   select(ID, Saliva1Time, Saliva2Time, Saliva3Time, Saliva4Time, Saliva5Time, Saliva6Time, mdespa, mdesta, mdesxa, intspa, intsta, INTSXA, MDEDXPA, DYSDXPA, PulseAv1:PulseAv5, CCSC01:CCSC26, tclesa, echrdpa, SESA, riskHI, BP1Time:BP5Time, EXTSXA)
