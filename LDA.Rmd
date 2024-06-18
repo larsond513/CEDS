@@ -11,6 +11,8 @@ knitr::opts_chunk$set(echo = TRUE)
 # Set up 
 ## Data import
 ```{r}
+setwd("~/Documents/rstudio/CEDS")
+
 install.packages("afex")
 install.packages("lavaan")
 
@@ -28,8 +30,11 @@ library(afex)
 library(tidyr)
 library(sdamr)
 library(lavaan)
+```
 
-setwd("~/Documents/rstudio/CEDS")
+# Data pre-processing
+## Filtering data
+```{r}
 CEDS <- read.csv("Data/CEDS.csv")
 
 all_data <- CEDS %>%
@@ -41,10 +46,6 @@ all_data <- all_data %>%
 all_data <- all_data %>%
   filter(!if_all(everything(), is.na))
 
-```
-
-## Renaming columns 
-```{r}
 all_data <- all_data %>%
   rename(
     mdd_p = mdespa,
@@ -93,6 +94,7 @@ all_data <- all_data %>%
     t6 = Saliva6Time
   )
 ```
+
 ## clearning coping data
 ```{r}
 selected_columns <- c("act1", "act2", "act3", "act4", "act5", "act6","act7", "act8", "act9","act10","act11", "act12", "av1", "av2", "av3", "av4", "av5", "av6", "distr1", "distr2", "distr3", "distr4", "supp1", "supp2", "supp3", "supp4")
@@ -119,10 +121,51 @@ supportive_items <- c("supp1", "supp2", "supp3", "supp4")
 all_data$supportive_coping <- rowMeans(all_data[, supportive_items], na.rm = TRUE)
 ```
 
+# Data exploration
+```{r}
+exploration <- all_data %>%
+  select(starting_cortisol, t3, t4, t5, t6, BP3Time, BP4Time, BP5Time, PulseAv3, PulseAv4, PulseAv5, int_both, mdd_both, ID, supportive_coping, distracting_coping, active_coping, avoidant_coping, fin_hardship, ext_both)
+
+exploration_BP <- exploration %>%
+  pivot_longer(
+    cols = starts_with("BP"),
+    names_to = "time",
+    values_to = "BP")
+
+plot_raincloud(exploration_BP, BP, groups = time)
+```
+
+
+```{r}
+exploration_cortisol <- exploration %>%
+  pivot_longer(
+    cols = starts_with("t"),
+    names_to = "time",
+    values_to = "cortisol")
+
+plot_raincloud(exploration_cortisol, cortisol, groups = time)
+
+
+lm <- lm(cortisol ~ time + starting_cortisol, data=exploration_cortisol)
+exploration_cortisol$time <- as.factor(exploration_cortisol$time)
+summary(lm)
+
+mod1 <- afex::mixed(cortisol ~ time * distraction_coping + (1|ID), set_data_arg = TRUE, data=exploration_cortisol)
+summary(mod1)
+```
+
+
+```{r}
+exploration_HR <- exploration %>%
+  pivot_longer(
+    cols = starts_with("PulseAv"),
+    names_to = "time",
+    values_to = "HR")
+```
+
+
 ```{r}
 plot_raincloud(mod1_long, BP, groups = time)
-mod <- lm(BP ~ int_both*time, data = mod1_long)
-summary(mod)
 ```
 
 # Statistical analysis 
@@ -131,6 +174,18 @@ summary(mod)
 ```{r}
 #mod1_data <- all_data %>%
   #select(BP1Time, BP2Time, BP3Time, BP4Time, BP5Time, int_both, mdd_both, mdd_cutoff, ID, supportive_coping, distracting_coping, active_coping, avoidant_coping, fin_hardship, ses)
+
+Q1_1 <- quantile(mod1_data$BP3Time, probs=c(.25, .75), na.rm = TRUE)
+iqr1 <- IQR(mod1_data$BP3Time, na.rm = TRUE)
+excluded_data <- subset(mod1_data, mod1_data$BP3Time > (Q1_1[1] - 1.5*iqr1) & mod1_data$BP3Time < (Q1_1[2]+1.5*iqr1))
+
+Q1_2 <- quantile(mod1_data$BP4Time, probs=c(.25, .75), na.rm = TRUE)
+iqr2 <- IQR(mod1_data$BP4Time, na.rm = TRUE)
+excluded_data <- subset(mod1_data, mod1_data$BP4Time > (Q1_2[1] - 1.5*iqr2) & mod1_data$BP4Time < (Q1_2[2]+1.5*iqr2))
+
+Q1_3 <- quantile(mod1_data$BP4Time, probs=c(.25, .75), na.rm = TRUE)
+iqr3 <- IQR(mod1_data$BP4Time, na.rm = TRUE)
+excluded_data <- subset(mod1_data, mod1_data$BP4Time > (Q1_3[1] - 1.5*iqr3) & mod1_data$BP4Time < (Q1_3[2]+1.5*iqr3))
 
 mod1_data <- all_data %>%
   select(BP3Time, BP4Time, BP5Time, int_both, mdd_both, ID, supportive_coping, distracting_coping, active_coping, avoidant_coping, fin_hardship, ext_both)
