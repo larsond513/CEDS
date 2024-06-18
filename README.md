@@ -17,21 +17,23 @@ More details of the CEDS sampling frame can be found in the original paper:
 After downloading and unzipping the dataset from the above repository, locate the file named `Archived_CEDS_Documentation` in the `Data` folder, where you can find the original dataset. 
 
 ## Measurement 
-The study focused on `Blood Pressure` and `Coping Strategies`. 
+The study focused on `Stress Recovery`, represented by `HR`, `BP`, `Cortisol` and `Coping Strategies`. 
 
-**Blood pressure** was measured five times throughout the original study, as shown in the Figure below. Our study focused on stress recovery; therefore, only `BP3Time`, `BP4Time`, and `BP5Time` were considered as predictors. 
+**Blood pressure and HR** were measured five times throughout the stress-inducing task, as shown in the Figure below. Our study focused on stress recovery; therefore, only `BP3Time`, `BP4Time`, and `BP5Time`, `PulseAv3`, `PulseAv4`, `PulseAv5`, `t3`, `t4`, `t5`, `t6`, were considered as predictors. 
 
-<img width="305" alt="image" src="https://github.com/larsond513/CEDS/assets/120323717/198950e4-ad5d-4fc7-ba5e-63972d9a3969">
-
+<p style="text-align: center;">
+  <img width="472" alt="image" src="https://github.com/larsond513/CEDS/assets/120323717/8f17b604-6067-4942-b655-00e3e92da62c">
+</p>
 
 **Coping Strategies** were measured using the [Manual for the Children's Coping Strategies Checklist & How I coped Under Pressure Scale](https://www.yumpu.com/en/document/read/12240213/manual-for-the-childrens-coping-strategies-checklist). The scoring sheet can also be found in the manual, shown in the figure below.
 
 <img width="543" alt="image" src="https://github.com/larsond513/CEDS/assets/120323717/561b161b-3ef8-431c-a890-3a9b9e62a56b">
 
 
-
 ## Usage
-The script described below is named `LDA.md`. Processed data files will be saved to the `Data/OutFiles` folder. Figures will be saved in the `Figure` folder. We have broken down processing into 3 stages, outlined below.
+The script described below is named `LDA.md`. Figures will be saved in the `Figure` folder. We have broken down processing into 4 stages, outlined below.
+
+Before running the script below, ensure that packages `afex` and `lavaan` are stored in the R studio.
 
 ### Preprocessing 
 <details>
@@ -54,6 +56,9 @@ The script described below is named `LDA.md`. Processed data files will be saved
 | Saliva5Time | t5  |
 | Saliva6Time  | t6 |
 | BP1Time  | starting_BP |
+|BP3Time|BP3Time| 
+|BP4Time| BP4Time| 
+|BP5Time|BP5Time|
 | CCSC01|act1-12  |
 | CCSC02  | av1 |
 | CCSC03  | act2  |
@@ -83,14 +88,28 @@ The script described below is named `LDA.md`. Processed data files will be saved
 
 </details>
 
-### Data Exploration
-The changes in Blood Pressure across time after the stress-inducing task
+#### Data Exploration
+We first explored the changes in `BP`, `HR`, and `Cortisol` overtime after the stress-inducing task using the raincloud plot.
 
-<img src="Figures/raincloud_plot.png" alt="Raincloud Plot" width="500" height="300">
+<div style="display: flex; justify-content: center; align-items: center;">
+  <div style="margin: 10px;">
+    <img src="Figure/raincloud_BP.png" alt="BP" width="300" height="200">
+  </div>
+  <div style="margin: 10px;">
+    <img src="Figure/raincloud_Cor.png" alt="Cor" width="300" height="200">
+  </div>
+  <div style="margin: 10px;">
+    <img src="Figure/raincloud_HR.png" alt="HR" width="300" height="200">
+  </div>
+</div>
 
-### Model Assumption Testing 
+#### Filtering outliers
+Outliers for BP and Cortisol at each time point were identified and filtered, respectively, based on [Tukey's range test](https://api.repository.cam.ac.uk/server/api/core/bitstreams/911a5707-d540-4338-9341-2fff8ea92bf5/content)
 
 ### Model fitting 
+We fit the Linear-Mixed Effect (LME) model
+#### Model Assumption Testing 
+
 
 
 
