@@ -1,0 +1,184 @@
+---
+title: "LDA"
+output: html_document
+date: "2024-05-28"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Set up 
+## Data import
+```{r}
+install.packages("afex")
+install.packages("lavaan")
+
+library(rstudioapi)
+library(psych)
+library(deSolve)  
+library(ggplot2)   
+library(nlme)     
+library(lme4)     
+library(zoo)       
+library(reshape2)  
+library(plyr) 
+library(dplyr)
+library(afex)
+library(tidyr)
+library(sdamr)
+library(lavaan)
+
+CEDS <- read.csv("CEDS.csv")
+
+all_data <- CEDS %>%
+  select(ID, Saliva1Time, Saliva2Time, Saliva3Time, Saliva4Time, Saliva5Time, Saliva6Time, mdespa, mdesta, mdesxa, intspa, intsta, INTSXA, MDEDXPA, DYSDXPA, PulseAv1:PulseAv5, CCSC01:CCSC26, tclesa, echrdpa, SESA, riskHI, BP1Time:BP5Time, EXTSXA)
+
+all_data <- all_data %>%
+  filter(!if_any(starts_with("BP"), is.na))
+
+all_data <- all_data %>%
+  filter(!if_all(everything(), is.na))
+
+```
+
+## Renaming columns 
+```{r}
+all_data <- all_data %>%
+  rename(
+    mdd_p = mdespa,
+    mdd_t = mdesta,
+    mdd_both = mdesxa,
+    int_p = intspa,
+    int_t = intspa,
+    int_both = INTSXA,
+    mdd_cutoff = MDEDXPA,
+    dys_cuttoff = DYSDXPA,
+    ext_both = EXTSXA,
+    trauma = tclesa,
+    ses = SESA,
+    fin_hardship = echrdpa,
+    act1 = CCSC01,
+    av1 = CCSC02,
+    act2 = CCSC03,
+    act3 = CCSC04,
+    av2 = CCSC05,
+    supp1 = CCSC06,
+    av3 = CCSC07,
+    act4 = CCSC08,
+    av4 = CCSC09,
+    supp2 = CCSC10,
+    act5 = CCSC11,
+    distr1 = CCSC12,
+    supp3 = CCSC13,
+    act6 = CCSC14,
+    distr2 = CCSC15,
+    act7 = CCSC16,
+    act8 = CCSC17,
+    supp4 = CCSC18,
+    av5 = CCSC19,
+    distr3 = CCSC20,
+    act9 = CCSC21,
+    act10 = CCSC22,
+    act11 = CCSC23,
+    av6 = CCSC24,
+    distr4 = CCSC25,
+    act12 = CCSC26,
+    starting_cortisol = Saliva1Time,
+    t2 = Saliva2Time,
+    t3 = Saliva3Time,
+    t4 = Saliva4Time,
+    t5 = Saliva5Time, 
+    t6 = Saliva6Time
+  )
+```
+## clearning coping data
+```{r}
+selected_columns <- c("act1", "act2", "act3", "act4", "act5", "act6","act7", "act8", "act9","act10","act11", "act12", "av1", "av2", "av3", "av4", "av5", "av6", "distr1", "distr2", "distr3", "distr4", "supp1", "supp2", "supp3", "supp4")
+
+# to numeric 
+all_data <- all_data %>%
+  mutate(across(all_of(selected_columns), ~case_when(
+    . == "never" ~ 1,
+    . == "sometimes" ~ 2,
+    . == "often" ~ 3,
+    . == "most of the time" ~ 4,
+  )))
+# average for each strategy
+active_items <- c("act1", "act2", "act3", "act4", "act5", "act6","act7", "act8", "act9","act10","act11", "act12")
+all_data$active_coping <- rowMeans(all_data[, active_items], na.rm = TRUE)
+
+avoidance_items <- c("av1", "av2", "av3", "av4", "av5", "av6")
+all_data$avoidant_coping <- rowMeans(all_data[, avoidance_items], na.rm = TRUE)
+
+distraction_items <- c("distr1", "distr2", "distr3", "distr4")
+all_data$distracting_coping <- rowMeans(all_data[, distraction_items], na.rm = TRUE)
+
+supportive_items <- c("supp1", "supp2", "supp3", "supp4")
+all_data$supportive_coping <- rowMeans(all_data[, supportive_items], na.rm = TRUE)
+```
+
+```{r}
+plot_raincloud(mod1_long, BP, groups = time)
+mod <- lm(BP ~ int_both*time, data = mod1_long)
+summary(mod)
+```
+
+# Statistical analysis 
+## Cortisol and internalising symptoms
+### Convert dataset to vertical
+```{r}
+#mod1_data <- all_data %>%
+  #select(BP1Time, BP2Time, BP3Time, BP4Time, BP5Time, int_both, mdd_both, mdd_cutoff, ID, supportive_coping, distracting_coping, active_coping, avoidant_coping, fin_hardship, ses)
+
+mod1_data <- all_data %>%
+  select(BP3Time, BP4Time, BP5Time, int_both, mdd_both, ID, supportive_coping, distracting_coping, active_coping, avoidant_coping, fin_hardship, ext_both)
+
+Q1_1 <- quantile(mod1_data$BP3Time, probs=c(.25, .75), na.rm = TRUE)
+iqr1 <- IQR(mod1_data$BP3Time, na.rm = TRUE)
+excluded_data <- subset(mod1_data, mod1_data$BP3Time > (Q1_1[1] - 1.5*iqr1) & mod1_data$BP3Time < (Q1_1[2]+1.5*iqr1))
+
+Q1_2 <- quantile(mod1_data$BP4Time, probs=c(.25, .75), na.rm = TRUE)
+iqr2 <- IQR(mod1_data$BP4Time, na.rm = TRUE)
+excluded_data <- subset(mod1_data, mod1_data$BP4Time > (Q1_2[1] - 1.5*iqr2) & mod1_data$BP4Time < (Q1_2[2]+1.5*iqr2))
+
+Q1_3 <- quantile(mod1_data$BP4Time, probs=c(.25, .75), na.rm = TRUE)
+iqr3 <- IQR(mod1_data$BP4Time, na.rm = TRUE)
+excluded_data <- subset(mod1_data, mod1_data$BP4Time > (Q1_3[1] - 1.5*iqr3) & mod1_data$BP4Time < (Q1_3[2]+1.5*iqr3))
+
+mod1_long <- excluded_data %>%
+  pivot_longer(
+    cols = starts_with("BP"),
+    names_to = "time",
+    values_to = "BP")
+
+mod1_long$time <- as.factor(mod1_long$time)
+
+mod1 <- afex::mixed(BP ~ time * supportive_coping + (1|ID), set_data_arg = TRUE, data=mod1_long)
+mod2 <- afex::mixed(BP ~ time * supportive_coping * mdd_both + (1|ID), set_data_arg = TRUE, data=mod1_long)
+summary(mod1)
+summary(mod2)
+
+
+anova(mod1, mod2)
+
+mod_plot <- lme4::lmer(BP ~ time * supportive_coping + (1|ID), data=mod1_long)
+summary(mod_plot)
+
+mod1_long$pred <- predict(mod_plot)
+ggplot(mod1_long,aes(x=time,y=pred,colour=supportive_coping, group=supportive_coping)) + geom_point() + geom_line()
+
+summary(mod1)
+
+```
+
+```{r}
+mod_complex <-   '
+    BP3Time ~ 1 + active_coping + avoidant_coping + supportive_coping + distracting_coping 
+    BP4Time ~ 1 + active_coping + avoidant_coping + supportive_coping + distracting_coping 
+    BP5Time ~ 1 + active_coping + avoidant_coping + supportive_coping + distracting_coping
+'
+fmod_complex <- lavaan::sem(mod_complex, data=mod1_data)
+summary(fmod_complex)
+```
+
