@@ -19,16 +19,19 @@ After downloading and unzipping the dataset from the above repository, locate th
 ## Measurement 
 The study focused on `Stress Recovery`, represented by `HR`, `BP`, `Cortisol` and `Coping Strategies`. 
 
-**Blood pressure and HR** were measured five times throughout the stress-inducing task, as shown in the Figure below. Our study focused on stress recovery; therefore, only `BP3Time`, `BP4Time`, and `BP5Time`, `PulseAv3`, `PulseAv4`, `PulseAv5`, `t3`, `t4`, `t5`, `t6`, were considered as predictors. 
+**Blood pressure and HR** were measured _five times_ throughout the stress-inducing task; 
+**Cortisol** was measured _seven times_, as shown in the figure below. Our study focused on stress recovery; therefore, only `BP3Time`, `BP4Time`, `BP5Time`, `PulseAv3`, `PulseAv4`, `PulseAv5`, `t3`, `t4`, `t5`, and `t6` were considered as predictors.
 
-<p style="text-align: center;">
-  <img width="472" alt="image" src="https://github.com/larsond513/CEDS/assets/120323717/8f17b604-6067-4942-b655-00e3e92da62c">
+<p align="center">
+  <img width="350" alt="image" src="https://github.com/larsond513/CEDS/assets/120323717/8f17b604-6067-4942-b655-00e3e92da62c">
 </p>
 
-**Coping Strategies** were measured using the [Manual for the Children's Coping Strategies Checklist & How I coped Under Pressure Scale](https://www.yumpu.com/en/document/read/12240213/manual-for-the-childrens-coping-strategies-checklist). The scoring sheet can also be found in the manual, shown in the figure below.
+**Coping Strategies** were measured using the [Manual for the Children's Coping Strategies Checklist & How I coped Under Pressure Scale](https://www.yumpu.com/en/document/read/12240213/manual-for-the-childrens-coping-strategies-checklist). There are four dimensions of coping strategies according to the scale: `active coping`, `avoidant`, `support seeking` and `distraction strategies`. 
+The scoring sheet is shown in the figure below.
 
-<img width="543" alt="image" src="https://github.com/larsond513/CEDS/assets/120323717/561b161b-3ef8-431c-a890-3a9b9e62a56b">
-
+<p align="center">
+  <img width="543" alt="image" src="https://github.com/larsond513/CEDS/assets/120323717/561b161b-3ef8-431c-a890-3a9b9e62a56b">
+</p>
 
 ## Usage
 The script described below is named `LDA.md`. Figures will be saved in the `Figure` folder. We have broken down processing into 4 stages, outlined below.
@@ -91,17 +94,12 @@ Before running the script below, ensure that packages `afex` and `lavaan` are st
 #### Data Exploration
 We first explored the changes in `BP`, `HR`, and `Cortisol` overtime after the stress-inducing task using the raincloud plot.
 
-<div style="display: flex; justify-content: center; align-items: center;">
-  <div style="margin: 10px;">
-    <img src="Figure/raincloud_BP.png" alt="BP" width="300" height="200">
-  </div>
-  <div style="margin: 10px;">
-    <img src="Figure/raincloud_Cor.png" alt="Cor" width="300" height="200">
-  </div>
-  <div style="margin: 10px;">
-    <img src="Figure/raincloud_HR.png" alt="HR" width="300" height="200">
-  </div>
-</div>
+
+<p align="center">
+  <img src="Figure/raincloud_BP.png" alt="BP" width="300" height="200">
+  <img src="Figure/raincloud_Cor.png" alt="Cor" width="300" height="200">
+  <img src="Figure/raincloud_HR.png" alt="HR" width="300" height="200">
+</p>
 
 #### Filtering outliers
 Outliers for BP and Cortisol at each time point were identified and filtered, respectively, based on [Tukey's range test](https://api.repository.cam.ac.uk/server/api/core/bitstreams/911a5707-d540-4338-9341-2fff8ea92bf5/content)
