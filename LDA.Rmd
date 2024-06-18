@@ -197,29 +197,44 @@ iqr4 <- IQR(exploration$t5, na.rm = TRUE)
 excluded_cortisol <- subset(exploration, exploration$t5 > (Q1_4[1] - 1.5*iqr4) & exploration$t5 < (Q1_4[2]+1.5*iqr4))
 ```
 
-
+## LME with blood pressure
 ```{r}
-mod1_long <- excluded_data %>%
+BP_long <- excluded_BP %>% # convert data to long form
   pivot_longer(
     cols = starts_with("BP"),
     names_to = "time",
     values_to = "BP")
 
-mod1_long$time <- as.factor(mod1_long$time)
+BP_long$time <- as.factor(BP_long$time) # time to factor
+contrasts(BP_long$time) <- contr.poly(3) # polynomial contrasts
 
-mod1 <- afex::mixed(BP ~ time * supportive_coping + (1|ID), set_data_arg = TRUE, data=mod1_long)
-mod2 <- afex::mixed(BP ~ time * supportive_coping * mdd_both + (1|ID), set_data_arg = TRUE, data=mod1_long)
-summary(mod1)
-summary(mod2)
+# model based on theory: predicting BP based on time * coping interaction, allowing for random intercepts
+mod1_BP <- afex::mixed(BP ~ time * supportive_coping + starting_BP + (1|ID), set_data_arg = TRUE, check_contrasts = TRUE, data=BP_long)
+summary(mod1_BP)
 
+# intercept only model
+mod2_BP <- afex::mixed(BP ~ 1 + (1|ID), set_data_arg = TRUE, check_contrasts = TRUE, data=BP_long)
+anova(mod1_BP, mod2_BP) # anova results show theoretical model results in a significantly better fit for the data 
 
-anova(mod1, mod2)
+# model without coping and starting cortisol
+mod3_BP <- afex::mixed(BP ~ time + (1|ID), set_data_arg = TRUE, check_contrasts = TRUE, data=BP_long)
+anova(mod1_BP, mod3_BP) # theoretical model significantly better
 
-mod_plot <- lme4::lmer(BP ~ time * supportive_coping + (1|ID), data=mod1_long)
-summary(mod_plot)
+# model with only coping
+mod4_BP <- afex::mixed(BP ~ time * supportive_coping + (1|ID), set_data_arg = TRUE, check_contrasts = TRUE, data=BP_long)
+anova(mod1_BP, mod4_BP) # theoretical model significantly better 
 
-mod1_long$pred <- predict(mod_plot)
-ggplot(mod1_long,aes(x=time,y=pred,colour=supportive_coping, group=supportive_coping)) + geom_point() + geom_line()
+# model with only starting cortisol
+mod5_BP <- afex::mixed(BP ~ time + starting_BP + (1|ID), set_data_arg = TRUE, check_contrasts = TRUE, data=BP_long)
+anova(mod1_BP, mod5_BP) # theoretical model not significantly better but lower AIC and BIC. Theoretical model is the winner!!!
+```
+
+## Plotting model predications
+```{r}
+mod_plot <- lme4::lmer(BP ~ time * supportive_coping + starting_BP + (1|ID), data=BP_long)
+
+BP_long$pred <- predict(mod_plot)
+ggplot(BP_long,aes(x=time,y=pred,colour=supportive_coping, group=supportive_coping)) + geom_point() + geom_line()
 
 summary(mod1)
 
