@@ -19,7 +19,8 @@ After downloading and unzipping the dataset from the above repository, locate th
 ## Measurement 
 The study focused on `Stress Recovery`, represented by `HR`, `BP`, `Cortisol` and `Coping Strategies`. 
 
-**Blood pressure and HR** were measured _five times_ throughout the stress-inducing task; 
+**Blood pressure and HR** were measured _five times_ throughout the stress-inducing task. 
+
 **Cortisol** was measured _seven times_, as shown in the figure below. Our study focused on stress recovery; therefore, only `BP3Time`, `BP4Time`, `BP5Time`, `PulseAv3`, `PulseAv4`, `PulseAv5`, `t3`, `t4`, `t5`, and `t6` were considered as predictors.
 
 <p align="center">
@@ -34,7 +35,7 @@ The scoring sheet is shown in the figure below.
 </p>
 
 ## Usage
-The script described below is named `LDA.md`. Figures will be saved in the `Figure` folder. We have broken down processing into 4 stages, outlined below.
+The script described below is named `LDA.md`. Figures will be saved in the `Figure` folder. We have broken down processing into 3 stages, outlined below.
 
 Before running the script below, ensure that packages `afex` and `lavaan` are stored in the R studio.
 
@@ -106,8 +107,12 @@ Outliers for BP and Cortisol at each time point were identified and filtered, re
 
 ### Model fitting 
 We fit the Linear-Mixed Effect (LME) model
-#### Model Assumption Testing 
 
+### Model comparison
+
+## Results
+
+## Discussion
 
 
 
