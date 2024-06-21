@@ -1,7 +1,7 @@
 # Coping Strategies and Stress Recovery
 This repository contains the scripts necessary to preprocess, analyze, print and plot the result to answer the following research question: 
 
-**How do children's coping strategies impact their stress recovery?**
+**How do children's coping strategies impact their physiological indicies of stress recovery?**
 
 ## Background
 Stress is a condition of the mind-body interaction [(McEwen, 2006)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3181832/). The body responds to almost any event or challenge by releasing chemical mediators -e.g., catecholamines that increase heart rate and blood pressure -that help us cope with the situation. However, prolonged stress leads to latent vulnerabilities. At the theoretical level, most prevailing models of developmental psychopathology recognize the potential importance of psychosocial stress in the aetiology and maintenance of both internalizing and externalizing disorders in youth [(McMahon et al., 2003)](https://cdn.vanderbilt.edu/vu-my/wp-content/uploads/sites/2804/2019/04/14195723/McMahon-et-al-2003-J-of-Child-Psychology-and-Psychiatry.pdf).
@@ -106,7 +106,8 @@ We first explored the changes in `BP`, `HR`, and `Cortisol` overtime after the s
 Outliers for BP and Cortisol at each time point were identified and filtered, respectively, based on [Tukey's range test](https://api.repository.cam.ac.uk/server/api/core/bitstreams/911a5707-d540-4338-9341-2fff8ea92bf5/content)
 
 ### Model fitting 
-We fit the Linear-Mixed Effect (LME) model
+To investigate the relationship between physiological stress recovery and coping strategies, we initially wanted to examine whether changes in 
+We fit the Linear-Mixed Effect (LME) model 
 
 ### Model comparison
 
