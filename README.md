@@ -181,17 +181,17 @@ Post-hoc pairwise comparisons suggest that this interaction was primarily driven
 
 **Table 2: Pairwise comparisons between BP levels at high and low levels of supportive coping**
 
-| Comparison                     | Estimate | SE     | t-ratio | p-value |
-|--------------------------------|----------|--------|---------|---------|
-| Time 3 (high) - Time 4 (high)  | -0.34151 | 0.0175 | -19.500 | \<.0001 |
-| Time 3 (high) - Time 5 (high)  | -0.49199 | 0.0175 | -28.093 | \<.0001 |
-| Time 4 (high) - Time 5 (high)  | -0.15048 | 0.0175 | -8.593  | \<.0001 |
-| Time 5 (high) - Time 3 (low)   | 0.55156  | 0.1910 | 2.887   | \<0.05  |
-| Time 3 (low) - Time 4 (low)    | -0.35827 | 0.0145 | -24.789 | \<.0001 |
-| Time 3 (low) - Time 5 (low)    | -0.55768 | 0.0145 | -38.586 | \<.0001 |
-| Time 4 (low) - Time 5 (low)    | -0.19941 | 0.0145 | -13.797 | \<.0001 |
+| Comparison                    | Estimate | SE     | t-ratio | p-value |
+|-------------------------------|----------|--------|---------|---------|
+| Time 3 (high) - Time 4 (high) | -0.34151 | 0.0175 | -19.500 | \<.0001 |
+| Time 3 (high) - Time 5 (high) | -0.49199 | 0.0175 | -28.093 | \<.0001 |
+| Time 4 (high) - Time 5 (high) | -0.15048 | 0.0175 | -8.593  | \<.0001 |
+| Time 5 (high) - Time 3 (low)  | 0.55156  | 0.1910 | 2.887   | \<0.05  |
+| Time 3 (low) - Time 4 (low)   | -0.35827 | 0.0145 | -24.789 | \<.0001 |
+| Time 3 (low) - Time 5 (low)   | -0.55768 | 0.0145 | -38.586 | \<.0001 |
+| Time 4 (low) - Time 5 (low)   | -0.19941 | 0.0145 | -13.797 | \<.0001 |
 
-![**Figure 3**](Figure/group interaction.png)
+![**Figure 3**](Figure/group%20interaction.png)
 
 ## Discussion
 
