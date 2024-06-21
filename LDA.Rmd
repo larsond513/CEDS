@@ -11,11 +11,6 @@ knitr::opts_chunk$set(echo = TRUE)
 # Set up 
 ## Data import
 ```{r}
-setwd("~/Documents/rstudio/CEDS")
-
-install.packages("afex")
-install.packages("lavaan")
-
 library(rstudioapi)
 library(psych)
 library(deSolve)  
@@ -29,8 +24,20 @@ library(dplyr)
 library(afex)
 library(tidyr)
 library(sdamr)
+library(lmtest)
 library(lavaan)
+<<<<<<< HEAD
 library(emmeans)
+=======
+
+packages <- c("afex", "lavaan", "lmtest")
+for (pkg in packages) {
+  if (!require(pkg, character.only = TRUE)) {
+    install.packages(pkg, dependencies = TRUE)
+    library(pkg, character.only = TRUE)
+  }
+}
+>>>>>>> 315f5abcb980847c0984a7157d1561a2aa104ee4
 ```
 
 # Data pre-processing
@@ -135,7 +142,14 @@ exploration_BP <- exploration %>%
     names_to = "time",
     values_to = "BP")
 
-plot_raincloud(exploration_BP, BP, groups = time)
+raincloud_BP <- plot_raincloud(exploration_BP, BP, groups = time)
+
+# Define the relative path to the 'Figure' directory
+output_path <- "Figure/raincloud_BP.png"
+
+# Save the plot to the 'Figure' directory
+ggsave(filename = output_path, plot = raincloud_BP, width = 8, height = 6)
+
 ```
 
 ## Cortisol recovery
@@ -146,7 +160,14 @@ exploration_cortisol <- exploration %>%
     names_to = "time",
     values_to = "cortisol")
 
-plot_raincloud(exploration_cortisol, cortisol, groups = time)
+raincloud_Cor <- plot_raincloud(exploration_cortisol, cortisol, groups = time)
+
+# Define the relative path to the 'Figure' directory
+output_path <- "Figure/raincloud_Cor.png"
+
+# Save the plot to the 'Figure' directory
+ggsave(filename = output_path, plot = raincloud_Cor, width = 8, height = 6)
+
 ```
 
 ## Heart rate recovery
@@ -157,7 +178,11 @@ exploration_HR <- exploration %>%
     names_to = "time",
     values_to = "HR")
 
-plot_raincloud(exploration_HR, HR, groups = time)
+raincloud_HR <- plot_raincloud(exploration_HR, HR, groups = time)
+
+output_path <- "Figure/raincloud_HR.png"
+
+ggsave(filename = output_path, plot = raincloud_HR, width = 8, height = 6)
 ```
 
 # Statistical analysis 
@@ -262,3 +287,54 @@ summary(mod1)
 
 ```
 
+<<<<<<< HEAD
+=======
+```{r}
+mod_complex <-   '
+    BP3Time ~ 1 + active_coping + avoidant_coping + supportive_coping + distracting_coping 
+    BP4Time ~ 1 + active_coping + avoidant_coping + supportive_coping + distracting_coping 
+    BP5Time ~ 1 + active_coping + avoidant_coping + supportive_coping + distracting_coping
+'
+fmod_complex <- lavaan::sem(mod_complex, data=mod1_data)
+summary(fmod_complex)
+```
+
+## Model assumption testing 
+```{r}
+# Extract residuals and fitted values
+residuals <- residuals(mod1_BP$full_model)
+fitted_values <- fitted(mod1_BP$full_model)
+
+# 1. Linearity
+# Plot residuals vs. fitted values
+ggplot(data = data.frame(fitted = fitted_values, residuals = residuals), aes(x = fitted, y = residuals)) +
+  geom_point() +
+  geom_hline(yintercept = 0, col = "red") +
+  labs(title = "Residuals vs Fitted", x = "Fitted values", y = "Residuals")
+
+# 2. Normality of Residuals
+# Q-Q plot of residuals
+qqnorm(residuals)
+qqline(residuals, col = "red")
+
+# Shapiro-Wilk test for normality
+shapiro.test(residuals)
+
+# 3. Homoscedasticity
+# Plot residuals vs. fitted values
+ggplot(data = data.frame(fitted = fitted_values, abs_residuals = abs(residuals)), aes(x = fitted, y = abs_residuals)) +
+  geom_point() +
+  geom_hline(yintercept = 0, col = "red") +
+  labs(title = "Scale-Location Plot", x = "Fitted values", y = "Absolute Residuals")
+
+# Breusch-Pagan test
+bptest(lm(residuals ~ fitted_values)) 
+#the residuals appear to have constant variance, and the assumption of homoscedasticity is met.
+
+# 5. Random Effects Distribution
+# Q-Q plot of random effects
+random_effects <- ranef(mod1_BP$full_model)$ID[,1]
+qqnorm(random_effects)
+qqline(random_effects, col = "red")
+```
+>>>>>>> 315f5abcb980847c0984a7157d1561a2aa104ee4
