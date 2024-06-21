@@ -199,3 +199,4 @@ Post-hoc pairwise comparisons suggest that this interaction was primarily driven
 -   didnt examine the effects of other coping strategies
 -   could've controlled for other factors like demographic, risk level, gender, etc.
 -   maybe BP is not the best thing to examine?
+-   maybe arousal in the current moment not that directly related to what coping strategies they used in real life? (e.g. cannot use supportive coping now because no one to support them, or they rely more on support from others for ER because they are worse at it themselves? which is why low support actually has lower BP levels (non-significantly) than high support.
