@@ -191,6 +191,8 @@ Post-hoc pairwise comparisons suggest that this interaction was primarily driven
 | Time 3 (low) - Time 5 (low)    | -0.55768 | 0.0145 | -38.586 | \<.0001 |
 | Time 4 (low) - Time 5 (low)    | -0.19941 | 0.0145 | -13.797 | \<.0001 |
 
+![**Figure 3**](Figure/group interaction.png)
+
 ## Discussion
 
 -   **This suggests that the inclusion of supportive coping in addition to starting BP does not account for significant more variance in BP levels (move to discussion);** Effect size of supportive coping is small
