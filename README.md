@@ -159,13 +159,17 @@ Both visual inspection of Q-Q plots and Shapiro-Wilk test for normality did not 
 
 The package "[afex](https://cran.r-project.org/web/packages/afex/index.html)" was used to obtain p-values for the terms included for the linear-mixed effects model and the package "[effectsize](https://cran.r-project.org/web/packages/effectsize/index.html)" was used to compute the effect size of predictors.
 
-Results of the model showed a significant main effect of time (*F* (2, 618)=145.55, *p*\<0.001 *ηp*2= 0.32) but no main effect of supportive coping. However, there was a significant interaction between time and supportive coping (*F* (2, 618)=7.78, *p*\<0.001 *ηp*2= 0.02), suggesting that the main effect of time cannot be interpreted in isolation. Post-hoc pairwise comparisons using estimated marginal means (EMM) suggested that when supportive coping is held at 9.75, there is a significant difference between BP levels at all three time points, where BP demonstrates significant increases from time 3 across to time 5.
+Results of the model showed a significant main effect of time (*F* (2, 618)=145.55, *p*\<0.001 *ηp*2= 0.32) but no main effect of supportive coping. However, there was a significant interaction between time and supportive coping (*F* (2, 618)=7.78, *p*\<0.001 *ηp*2= 0.02), suggesting that the main effect of time cannot be interpreted in isolation. Post-hoc pairwise comparisons using estimated marginal means (EMM) suggested that when supportive coping is held at 9.75, there is a significant difference between BP levels at all three time points, where BP demonstrates significant increases from time 3 across to time 5 (Figure 2).
 
-| Pairwise Comparisons | Estimate | SE     | t-ratio | p-value |
-|----------------------|----------|--------|---------|---------|
-| BP at Time3 vs. 4    | -0.351   | 0.0111 | -31.694 | \<.0001 |
-| BP at Time3 vs. 5    | -0.531   | 0.0111 | -47.888 | \<.0001 |
-| BP at Time4 vs. 5    | -0.180   | 0.0111 | -16.194 | \<.0001 |
+**Table 1: Pairwise comparisons between BP levels when supportive coping is 9.75**
+
+| Comparison        | Estimate | SE     | t-ratio | p-value |
+|-------------------|----------|--------|---------|---------|
+| BP at Time3 vs. 4 | -0.351   | 0.0111 | -31.694 | \<.0001 |
+| BP at Time3 vs. 5 | -0.531   | 0.0111 | -47.888 | \<.0001 |
+| BP at Time4 vs. 5 | -0.180   | 0.0111 | -16.194 | \<.0001 |
+
+![<p align="center"> **Figure 2**](Figure/Emmeans interaction.png)
 
 ## Discussion
 
