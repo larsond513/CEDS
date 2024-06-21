@@ -236,24 +236,25 @@ BP_long$time <- as.factor(BP_long$time) # time to factor
 contrasts(BP_long$time) <- contr.poly(3) # polynomial contrasts
 
 # model based on theory: predicting BP based on time * coping interaction, allowing for random intercepts and controlling for starting BP
-mod1_BP <- afex::mixed(BP ~ time * supportive_coping + starting_BP + (1|ID), set_data_arg = TRUE, check_contrasts = TRUE, data=BP_long)
+mod1_BP <- afex::mixed(BP ~ time * supportive_coping + (1|ID), set_data_arg = TRUE, check_contrasts = TRUE, data=BP_long)
 summary(mod1_BP)
+anova(mod1_BP, type=3)
+
+#calculating effect size 
+effectsize::eta_squared(mod1_BP)
 
 # intercept only model
 mod2_BP <- afex::mixed(BP ~ 1 + (1|ID), set_data_arg = TRUE, check_contrasts = TRUE, data=BP_long)
 anova(mod1_BP, mod2_BP) # anova results show theoretical model results in a significantly better fit for the data 
 
-# model without coping and starting cortisol
+# model with only time 
 mod3_BP <- afex::mixed(BP ~ time + (1|ID), set_data_arg = TRUE, check_contrasts = TRUE, data=BP_long)
-anova(mod1_BP, mod3_BP) # theoretical model significantly better
+anova(mod1_BP, mod3_BP) # AIC and BIC not big difference 
 
 # model with only coping
-mod4_BP <- afex::mixed(BP ~ time * supportive_coping + (1|ID), set_data_arg = TRUE, check_contrasts = TRUE, data=BP_long)
+mod4_BP <- afex::mixed(BP ~ supportive_coping + (1|ID), set_data_arg = TRUE, check_contrasts = TRUE, data=BP_long)
 anova(mod1_BP, mod4_BP) # theoretical model significantly better 
 
-# model with only starting cortisol
-mod5_BP <- afex::mixed(BP ~ time + starting_BP + (1|ID), set_data_arg = TRUE, check_contrasts = TRUE, data=BP_long)
-anova(mod1_BP, mod5_BP) # not significantly worse so okay
 ```
 ## Examining the interaction
 ```{r}
@@ -265,12 +266,24 @@ BP_long$supp_class <- as.factor(BP_long$supp_class)
 contrasts <- matrix(c(-1, 1), ncol = 1)
 contrasts(BP_long$supp_class) <- contrasts
 
-mod1_BP <- afex::mixed(BP ~ time * supp_class + starting_BP + (1|ID), set_data_arg = TRUE, check_contrasts = TRUE, data=BP_long)
-summary(mod1_BP)
-
-mod1_emm <- emmeans(mod1_BP, ~ time * supp_class)
-mod1_pairwise <- contrast(mod1_emm, interaction = "pairwise", by="time", adjust = "Tukey")
+mod1 <- lme4::lmer(BP ~ time * supportive_coping + (1|ID), data=BP_long)
+mod1_emm <- emmeans(mod1, ~ time * supportive_coping)
+mod1_pairwise <- pairs(mod1_emm, adjust = "Tukey")
 summary(mod1_pairwise)
+
+# Convert estimated marginal means to a data frame
+emm_df <- as.data.frame(mod1_emm)
+
+# Plot the interaction
+ggplot(emm_df, aes(x = time, y = emmean, color = supportive_coping, group = supportive_coping)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = "Interaction Plot of Time and Supportive Coping on BP",
+    x = "Time",
+    y = "Estimated Marginal Mean of BP"
+  ) +
+  theme_minimal()
 
 interaction_plot <- emmip(mod1_BP, supp_class ~ time, CIs = TRUE)
 interaction_plot
@@ -316,7 +329,7 @@ ggplot(data = data.frame(fitted = fitted_values, residuals = residuals), aes(x =
 
 # 2. Normality of Residuals
 # Q-Q plot of residuals
-qqnorm(residuals, main="Figure 1: Q-Q Plot of Residuals to Assess Normality") 
+qqnorm(residuals, main="Figure 1a: Q-Q Plot of Residuals to Assess Normality") 
 
 # Shapiro-Wilk test for normality
 shapiro.test(residuals)
@@ -327,7 +340,7 @@ ggplot(data = data.frame(fitted = fitted_values, abs_residuals = abs(residuals))
   geom_point() +
   geom_hline(yintercept = 0, col = "red") +
   labs(title = "Scale-Location Plot", x = "Fitted values", y = "Absolute Residuals")+
-  ggtitle("Figure 2: Residuals vs. Predicated Plot to Assess Homoscedasticity")
+  ggtitle("Figure 1b: Residuals vs. Predicated Plot to Assess Homoscedasticity")
 
 # Breusch-Pagan test
 bptest(lm(residuals ~ fitted_values)) 

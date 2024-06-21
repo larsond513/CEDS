@@ -120,9 +120,9 @@ Outliers for BP and Cortisol at each time point were identified and filtered, re
 
 To investigate the relationship between physiological stress recovery and coping strategies, we initially wanted to examine whether changes in the slope of blood pressure can be predicated by coping strategies and attempted to do so through both linear-mixed effects model (LME) with random slopes and intercepts and structural equation modelling (SEM). However, the data was insufficient for random slopes to be fitted and negative variance (Heywood cases) emerged while fitting the SEM model. This suggested to us that neither of those models were appropriate for the data.
 
-Ultimately, our theory driven LME model to predict BP included an interaction term for the time point when BP was sampled (time) and supportive coping, controls for starting levels of BP, and included random intercepts for each participant. To test for a linear trend in changes in BP across recovery, we applied polynomial contrasts to the categorical factor time.
+Ultimately, our theory driven LME model to predict BP included an interaction term for the time point when BP was sampled (time) and supportive coping and included random intercepts for each participant to account for individual variance in their peak level of BP. To test for a linear trend in changes in BP across recovery, we applied polynomial contrasts to the categorical factor time.
 
-> **Mod 1 = BP \~ time \* supportive_coping + starting_BP + (1\|ID)**
+> **Mod 1 = BP \~ time \* supportive_coping + (1\|ID)**
 
 ### Model comparison
 
@@ -130,30 +130,42 @@ To ensure this model was the most appropriate for the data, we conducted stepwis
 
 We compared the theoretical model against the following models using chi-squared difference test:
 
--   Mod 2: BP predicated by only an **intercept**
+-   Mod 2: BP predicated by only **random intercepts**
 
--   Mod 3: BP predicated by **time**
+-   Mod 3: BP predicated by **supportive coping**
 
--   Mod 4: BP predicated by **time** and **supportive coping** interaction
+-   Mod 4: BP predicated by **time**
 
--   Mod 5: BP predicated by **time** and **starting BP**
+In all model comparisons but the last one, the theoretical model was significantly better (all p\<2.2e-16). When the theoretical model was compared against Mod 4, the chi-squared difference test showed no significant difference (p\>1). A further examination of the Akaike information criterion (AIC) and Bayesian information criterion (BIC) suggest that Mod 4 produces a slightly better fit for the data than our theoretical model.
 
-In all model comparisons but the last one, the theoretical model was significantly better (all p\<2.2e-16). When the theoretical model was compared against a model which included predictors time and starting BP, the chi-squared difference test showed no significant difference (p\>1). A further examination of the Akaike information criterion (AIC) and Bayesian information criterion (BIC) suggest that the final model is produces a slightly better fit for the data than our theoretical model.
+|         | Mod 1 (theoretical model) | Mod 3 (model with only time) |
+|---------|---------------------------|------------------------------|
+| **AIC** | 893.26                    | 903.03                       |
+| **BIC** | 931.97                    | 931.97                       |
 
-|         | Mod 1 (theoretical model) | Mod 5 (model with only time and starting BP) |
-|---------|---------------------------|----------------------------------------------|
-| **AIC** | -467.86                   | -488.28                                      |
-| **BIC** | -424.31                   | -459.25                                      |
-
-As we are interested in the relationship between coping strategies and the theoretical model is not a significantly worse fit for the data, we decided to proceed with the theoretical model.
+As we are interested in the relationship between coping strategies and the theoretical model is not a significantly worse fit for the data, we decided to proceed with examining the results of the theoretical model.
 
 ### Assessing model assumptions
 
 Both visual inspection of Q-Q plots and Shapiro-Wilk test for normality did not indicate a violation (Figure 1a), and both visual inspection of residuals vs. predicated plots and Breusch-Pagan test for homoscedascity did not indicate an assumption violation (Figure 1b).
 
-Linearity
+![](Figure/normality.png){width="270" height="185"}
+
+![](Figure/Homoscedascity.png){width="270" height="179"}
+
+**NEED TO ADD Linearity**
 
 ## Results
+
+The package "[afex](https://cran.r-project.org/web/packages/afex/index.html)" was used to obtain p-values for the terms included for the linear-mixed effects model and the package "[effectsize](https://cran.r-project.org/web/packages/effectsize/index.html)" was used to compute the effect size of predictors.
+
+Results of the model showed a significant main effect of time (*F* (2, 618)=145.55, *p*\<0.001 *ηp*2= 0.32) but no main effect of supportive coping. However, there was a significant interaction between time and supportive coping (*F* (2, 618)=7.78, *p*\<0.001 *ηp*2= 0.02), suggesting that the main effect of time cannot be interpreted in isolation. Post-hoc pairwise comparisons using estimated marginal means (EMM) suggested that when supportive coping is held at 9.75, there is a significant difference between BP levels at all three time points, where BP demonstrates significant increases from time 3 across to time 5.
+
+| Pairwise Comparisons | Estimate | SE     | t-ratio | p-value |
+|----------------------|----------|--------|---------|---------|
+| BP at Time3 vs. 4    | -0.351   | 0.0111 | -31.694 | \<.0001 |
+| BP at Time3 vs. 5    | -0.531   | 0.0111 | -47.888 | \<.0001 |
+| BP at Time4 vs. 5    | -0.180   | 0.0111 | -16.194 | \<.0001 |
 
 ## Discussion
 
