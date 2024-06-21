@@ -198,3 +198,4 @@ Post-hoc pairwise comparisons suggest that this interaction was primarily driven
 -   **This suggests that the inclusion of supportive coping in addition to starting BP does not account for significant more variance in BP levels (move to discussion);** Effect size of supportive coping is small
 -   didnt examine the effects of other coping strategies
 -   could've controlled for other factors like demographic, risk level, gender, etc.
+-   maybe BP is not the best thing to examine?
