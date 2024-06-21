@@ -147,6 +147,12 @@ In all model comparisons but the last one, the theoretical model was significant
 
 As we are interested in the relationship between coping strategies and the theoretical model is not a significantly worse fit for the data, we decided to proceed with the theoretical model.
 
+### Assessing model assumptions
+
+Both visual inspection of Q-Q plots and Shapiro-Wilk test for normality did not indicate a violation (Figure 1a), and both visual inspection of residuals vs. predicated plots and Breusch-Pagan test for homoscedascity did not indicate an assumption violation (Figure 1b).
+
+Linearity
+
 ## Results
 
 ## Discussion
