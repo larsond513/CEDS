@@ -26,6 +26,7 @@ library(tidyr)
 library(sdamr)
 library(lmtest)
 library(lavaan)
+library(car)
 <<<<<<< HEAD
 library(emmeans)
 =======
@@ -312,10 +313,10 @@ ggplot(data = data.frame(fitted = fitted_values, residuals = residuals), aes(x =
   geom_hline(yintercept = 0, col = "red") +
   labs(title = "Residuals vs Fitted", x = "Fitted values", y = "Residuals")
 
+
 # 2. Normality of Residuals
 # Q-Q plot of residuals
-qqnorm(residuals)
-qqline(residuals, col = "red")
+qqnorm(residuals, main="Figure 1: Q-Q Plot of Residuals to Assess Normality") 
 
 # Shapiro-Wilk test for normality
 shapiro.test(residuals)
@@ -325,7 +326,8 @@ shapiro.test(residuals)
 ggplot(data = data.frame(fitted = fitted_values, abs_residuals = abs(residuals)), aes(x = fitted, y = abs_residuals)) +
   geom_point() +
   geom_hline(yintercept = 0, col = "red") +
-  labs(title = "Scale-Location Plot", x = "Fitted values", y = "Absolute Residuals")
+  labs(title = "Scale-Location Plot", x = "Fitted values", y = "Absolute Residuals")+
+  ggtitle("Figure 2: Residuals vs. Predicated Plot to Assess Homoscedasticity")
 
 # Breusch-Pagan test
 bptest(lm(residuals ~ fitted_values)) 
