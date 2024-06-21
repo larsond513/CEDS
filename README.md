@@ -46,7 +46,7 @@ The script described below is named `LDA.md`. Figures will be saved in the `Figu
 
 Before running the script below, ensure that packages `afex` and `lavaan` are stored in the R studio.
 
-## Data Analysis 
+## Data Analysis
 
 ### Preprocessing
 
@@ -169,8 +169,30 @@ Results of the model showed a significant main effect of time (*F* (2, 618)=145.
 | BP at Time3 vs. 5 | -0.531   | 0.0111 | -47.888 | \<.0001 |
 | BP at Time4 vs. 5 | -0.180   | 0.0111 | -16.194 | \<.0001 |
 
-![<p align="center"> **Figure 2**](Figure/Emmeans interaction.png)
+![**Figure 2**](Figure/Emmeans%20interaction.png)
+
+As we are also interested whether there would be group differences in BP levels for individuals with different levels of supportive coping, we classed participants' supportive coping as either "high" (n=378) or "low" (n=555) based on the median level of supportive coping, and fitted another LME model with "supportive coping class" as a predictor instead of supportive coping values, and both time and supporting coping class contrast coded using polynomial contrasts.
+
+> **Model: BP \~ time \* supp_class + (1\|ID)**
+
+The results of this LME model replicated that of the previous model, with a significant main effect of time (*F* (2, 618)=1108.07, *p*\<0.001 *ηp*2= 0.32) and a significant interaction between time and supportive coping class (*F* (2, 618)=4.52, *p*\<0.05 *ηp*2= 0.02). This supports the appropriateness of converting supportive coping to a categorical variable.
+
+Post-hoc pairwise comparisons suggest that this interaction was primarily driven by the following contrasts (Table 2). An examination of the pairwise comparisons suggest that participants of high and low supportive coping both show increases in their BP levels across each recovery time point (estimates from -0.34 to -0.15 in high supportive coping group; -0.35 to -0.20 to low supportive coping group), but there are no significant group differences at each time point (Figure 3).
+
+**Table 2: Pairwise comparisons between BP levels at high and low levels of supportive coping**
+
+| Comparison                     | Estimate | SE     | t-ratio | p-value |
+|--------------------------------|----------|--------|---------|---------|
+| Time 3 (high) - Time 4 (high)  | -0.34151 | 0.0175 | -19.500 | \<.0001 |
+| Time 3 (high) - Time 5 (high)  | -0.49199 | 0.0175 | -28.093 | \<.0001 |
+| Time 4 (high) - Time 5 (high)  | -0.15048 | 0.0175 | -8.593  | \<.0001 |
+| Time 5 (high) - Time 3 (low)   | 0.55156  | 0.1910 | 2.887   | \<0.05  |
+| Time 3 (low) - Time 4 (low)    | -0.35827 | 0.0145 | -24.789 | \<.0001 |
+| Time 3 (low) - Time 5 (low)    | -0.55768 | 0.0145 | -38.586 | \<.0001 |
+| Time 4 (low) - Time 5 (low)    | -0.19941 | 0.0145 | -13.797 | \<.0001 |
 
 ## Discussion
 
--   **This suggests that the inclusion of supportive coping in addition to starting BP does not account for significant more variance in BP levels (move to discussion).**
+-   **This suggests that the inclusion of supportive coping in addition to starting BP does not account for significant more variance in BP levels (move to discussion);** Effect size of supportive coping is small
+-   didnt examine the effects of other coping strategies
+-   could've controlled for other factors like demographic, risk level, gender, etc.

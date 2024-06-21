@@ -236,7 +236,7 @@ BP_long$time <- as.factor(BP_long$time) # time to factor
 contrasts(BP_long$time) <- contr.poly(3) # polynomial contrasts
 
 # model based on theory: predicting BP based on time * coping interaction, allowing for random intercepts and controlling for starting BP
-mod1_BP <- afex::mixed(BP ~ time * supportive_coping + (1|ID), set_data_arg = TRUE, check_contrasts = TRUE, data=BP_long)
+mod1_BP <- afex::mixed(BP ~ time * supportive_coping + (1|ID), set_data_arg = TRUE, check_contrasts = FALSE, data=BP_long)
 summary(mod1_BP)
 anova(mod1_BP, type=3)
 
@@ -244,28 +244,20 @@ anova(mod1_BP, type=3)
 effectsize::eta_squared(mod1_BP)
 
 # intercept only model
-mod2_BP <- afex::mixed(BP ~ 1 + (1|ID), set_data_arg = TRUE, check_contrasts = TRUE, data=BP_long)
+mod2_BP <- afex::mixed(BP ~ 1 + (1|ID), set_data_arg = TRUE, check_contrasts = FALSE, data=BP_long)
 anova(mod1_BP, mod2_BP) # anova results show theoretical model results in a significantly better fit for the data 
 
 # model with only time 
-mod3_BP <- afex::mixed(BP ~ time + (1|ID), set_data_arg = TRUE, check_contrasts = TRUE, data=BP_long)
+mod3_BP <- afex::mixed(BP ~ time + (1|ID), set_data_arg = TRUE, check_contrasts = FALSE, data=BP_long)
 anova(mod1_BP, mod3_BP) # AIC and BIC not big difference 
 
 # model with only coping
-mod4_BP <- afex::mixed(BP ~ supportive_coping + (1|ID), set_data_arg = TRUE, check_contrasts = TRUE, data=BP_long)
+mod4_BP <- afex::mixed(BP ~ supportive_coping + (1|ID), set_data_arg = TRUE, check_contrasts = FALSE, data=BP_long)
 anova(mod1_BP, mod4_BP) # theoretical model significantly better 
 
 ```
-## Examining the interaction
+## Examining the interaction (emm)
 ```{r}
-# Use median to divide into high vs. low coping group 
-median_value <- median(BP_long$supportive_coping)
-BP_long$supp_class <- ifelse(BP_long$supportive_coping > median_value, "high", "low")
-
-BP_long$supp_class <- as.factor(BP_long$supp_class)
-contrasts <- matrix(c(-1, 1), ncol = 1)
-contrasts(BP_long$supp_class) <- contrasts
-
 mod1 <- lme4::lmer(BP ~ time * supportive_coping + (1|ID), data=BP_long)
 mod1_emm <- emmeans(mod1, ~ time * supportive_coping)
 mod1_pairwise <- pairs(mod1_emm, adjust = "Tukey")
@@ -284,33 +276,31 @@ ggplot(emm_df, aes(x = time, y = emmean, color = supportive_coping, group = supp
     y = "Estimated Marginal Mean of BP"
   ) +
   theme_minimal()
+```
 
-interaction_plot <- emmip(mod1_BP, supp_class ~ time, CIs = TRUE)
+## Examining the interaction (categorisation)
+```{r}
+# Use median to divide into high vs. low coping group 
+median_value <- median(BP_long$supportive_coping)
+BP_long$supp_class <- ifelse(BP_long$supportive_coping > median_value, "high", "low")
+sum(BP_long$supp_class=="high")
+sum(BP_long$supp_class=="low")
+
+
+BP_long$supp_class <- as.factor(BP_long$supp_class)
+contrasts <- matrix(c(-1, 1), ncol = 1)
+contrasts(BP_long$supp_class) <- contrasts
+mod2 <- afex::mixed(BP ~ time * supp_class + (1|ID), set_data_arg = TRUE, check_contrasts = FALSE, data=BP_long)
+effectsize::eta_squared(mod1_BP)
+anova(mod2)
+summary(mod2)
+
+mod2_emm <- emmeans(mod2, ~ time * supp_class)
+mod1_pairwise <- pairs(mod2_emm, adjust = "Tukey")
+summary(mod1_pairwise)
+
+interaction_plot <- emmip(mod2, supp_class ~ time, CIs = TRUE)
 interaction_plot
-```
-
-
-## Plotting model predications
-```{r}
-mod_plot <- lme4::lmer(BP ~ time * supportive_coping + starting_BP + (1|ID), data=BP_long)
-
-BP_long$pred <- predict(mod_plot)
-ggplot(BP_long,aes(x=time,y=pred,colour=supportive_coping, group=supportive_coping)) + geom_point() + geom_line()
-
-summary(mod1)
-
-```
-
-<<<<<<< HEAD
-=======
-```{r}
-mod_complex <-   '
-    BP3Time ~ 1 + active_coping + avoidant_coping + supportive_coping + distracting_coping 
-    BP4Time ~ 1 + active_coping + avoidant_coping + supportive_coping + distracting_coping 
-    BP5Time ~ 1 + active_coping + avoidant_coping + supportive_coping + distracting_coping
-'
-fmod_complex <- lavaan::sem(mod_complex, data=mod1_data)
-summary(fmod_complex)
 ```
 
 ## Model assumption testing 
