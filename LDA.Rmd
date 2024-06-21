@@ -262,13 +262,3 @@ summary(mod1)
 
 ```
 
-```{r}
-mod_complex <-   '
-    BP3Time ~ 1 + active_coping + avoidant_coping + supportive_coping + distracting_coping 
-    BP4Time ~ 1 + active_coping + avoidant_coping + supportive_coping + distracting_coping 
-    BP5Time ~ 1 + active_coping + avoidant_coping + supportive_coping + distracting_coping
-'
-fmod_complex <- lavaan::sem(mod_complex, data=mod1_data)
-summary(fmod_complex)
-```
-
