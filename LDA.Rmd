@@ -279,7 +279,7 @@ ggplot(emm_df, aes(x = time, y = emmean, color = supportive_coping, group = supp
   geom_line(size = 1.2) +  # Thicker lines
   geom_point(size = 3) +  # Larger points
   labs(
-    title = "Interaction Plot of Time and Supportive Coping on BP",
+    title = "Figure 2: Interaction Plot of Time and Supportive Coping on BP",
     x = "Time",
     y = "Estimated Marginal Mean of BP",
     color = "Supportive Coping"
@@ -293,7 +293,7 @@ ggplot(emm_df, aes(x = time, y = emmean, color = supportive_coping, group = supp
   )
 
 # Save the plot with improved dimensions and resolution
-ggsave("Figure/Emmeans_interaction.png", width = 10, height = 6, dpi = 300)
+ggsave("Figure/Figure2.png", width = 10, height = 6, dpi = 300)
 
 ```
 
@@ -318,8 +318,19 @@ mod2_emm <- emmeans(mod2, ~ time * supp_class)
 mod1_pairwise <- pairs(mod2_emm, adjust = "Tukey")
 summary(mod1_pairwise)
 
-interaction_plot <- emmip(mod2, supp_class ~ time, CIs = TRUE)
+interaction_plot <- emmip(mod2, supp_class ~ time, CIs = TRUE) +
+  theme_minimal(base_size = 15) +
+  ggtitle("Figure 3: Interaction") + 
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),  # Center and bold the plot title
+    axis.title = element_text(size = 16),  # Larger axis titles
+    legend.title = element_text(size = 16),  # Larger legend title
+    legend.text = element_text(size = 14)  # Larger legend text
+  )
 interaction_plot
+
+ggsave("Figure/Figure3.png", plot = interaction_plot, width = 10, height = 6)
+
 ```
 
 ## Model assumption testing 
@@ -330,19 +341,32 @@ fitted_values <- fitted(mod1_BP$full_model)
 
 # 1. Linearity
 # Plot residuals vs. fitted values
-ggplot(data = data.frame(fitted = fitted_values, residuals = residuals), aes(x = fitted, y = residuals)) +
+residuals_vs_fitted_plot <- ggplot(data = data.frame(fitted = fitted_values, residuals = residuals), aes(x = fitted, y = residuals)) +
   geom_point() +
   geom_hline(yintercept = 0, col = "red") +
-  labs(title = "Residuals vs Fitted", x = "Fitted values", y = "Residuals")
+  labs(title = "Figure 4: Residuals vs Fitted", x = "Fitted values", y = "Residuals")
 
+ggsave("Figure/Figure4.png", plot = residuals_vs_fitted_plot, width = 10, height = 6)
 
 # 2. Normality of Residuals
 # Q-Q plot of residuals
-png(file = "Figure/normality.png", width = 720, height = 480)
-qqnorm(residuals, main="Figure 1a: Q-Q Plot of Residuals to Assess Normality")
-qqline(residuals, col = "red")
-dev.off()
+qqnorm_plot <- ggplot(data = data.frame(residuals = residuals), aes(sample = residuals)) +
+  stat_qq() +
+  stat_qq_line(col = "red") +
+  labs(
+    title = "Figure 1a: Q-Q Plot of Residuals to Assess Normality",
+    x = "Theoretical Quantiles",
+    y = "Sample Quantiles"
+  ) +
+  theme_minimal(base_size = 15) +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),  # Center and bold the plot title
+    axis.title = element_text(size = 16),  # Larger axis titles
+    axis.text = element_text(size = 14)   # Larger axis text
+  )
 
+# Save the Q-Q plot
+s
 # Shapiro-Wilk test for normality
 shapiro.test(residuals)
 
@@ -366,7 +390,7 @@ homoscedasticity_plot <- ggplot(data = data.frame(fitted = fitted_values, abs_re
   )
 
 # Save the homoscedasticity plot
-ggsave("Figure/Homoscedascity.png", plot = homoscedasticity_plot, width = 12, height = 8, dpi = 300)
+ggsave("Figure/Homoscedascity.png", plot = homoscedasticity_plot, width = 10, height = 6, dpi = 300)
 
 # Breusch-Pagan test
 bptest(lm(residuals ~ fitted_values)) 
