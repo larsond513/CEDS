@@ -41,13 +41,11 @@ The study focused on `Stress Recovery`, represented by `HR`, `BP`, `Cortisol` an
 
 </p>
 
-## Usage
+## Data Analysis
 
-The script described below is named `LDA.md`. Figures will be saved in the `Figure` folder. We have broken down processing into 3 stages, outlined below.
+The script described below is named `LDA.md`. Figures will be saved in the `Figure` folder. We have broken down processing into 4 stages, outlined below.
 
 Before running the script below, ensure that packages `afex` and `lavaan` are stored in the R studio.
-
-## Data Analysis
 
 ### Preprocessing
 
@@ -119,7 +117,7 @@ Outliers for BP and Cortisol at each time point were identified and filtered, re
 
 ### Model fitting
 
-To investigate the relationship between physiological stress recovery and coping strategies, we initially wanted to examine whether changes in the slope of blood pressure can be predicated by coping strategies and attempted to do so through both linear-mixed effects model (LME) with random slopes and intercepts and structural equation modelling (SEM). However, the data was insufficient for random slopes to be fitted and negative variance (Heywood cases) emerged while fitting the SEM model. This suggested to us that neither of those models was appropriate for the data.
+To investigate the relationship between physiological stress recovery and coping strategies, we initially wanted to examine whether changes in the slope of blood pressure can be predicated by coping strategies and attempted to do so through both linear-mixed effects model (LME) with random slopes and intercepts and structural equation modelling (SEM). However, the data was insufficient for random slopes to be fitted and negative variance ([Heywood cases](https://journals.sagepub.com/doi/10.1177/0049124112442138)) emerged while fitting the SEM model. This suggested to us that neither of those models was appropriate for the data.
 
 Ultimately, our theory driven LME model to predict BP included an interaction term for the time point when BP was sampled (time) and supportive coping and included random intercepts for each participant to account for individual variance in their peak level of BP. To test for a linear trend in changes in BP across recovery, we applied polynomial contrasts to the categorical factor time.
 
@@ -216,6 +214,43 @@ Post-hoc pairwise comparisons suggest that this interaction was primarily driven
   
 ### Limitations 
 - **The model suggests that the inclusion of supportive coping in addition to starting BP does not account for significantly more variance in BP levels**. The effect size of supportive coping is small.
+
+<p align="center">
+<b>Table 3 Effect size</b>
+</p>
+
+<div align="center">
+
+<table>
+  <tr>
+    <th>Parameter</th>
+    <th>Eta2</th>
+    <th>95% CI</th>
+  </tr>
+  <tr>
+    <td>time</td>
+    <td>0.32</td>
+    <td>[0.27, 1.00]</td>
+  </tr>
+  <tr>
+    <td>supportive coping</td>
+    <td>1.50e-03</td>
+    <td>[0.00, 1.00]</td>
+  </tr>
+  <tr>
+    <td>starting_BP</td>
+    <td>0.99</td>
+    <td>[0.99, 1.00]</td>
+  </tr>
+  <tr>
+    <td>time: supportive coping</td>
+    <td>-0.02</td>
+    <td>[0.01, 1.00]</td>
+  </tr>
+</table>
+
+</div>
+
 - We didn't examine the effects of other coping strategies, such as distraction and avoidance coping strategies, given that they have been linked to stress recovery and prolonged stress. For example, some studies [(Holahan et al., 2005)](https://psycnet.apa.org/record/2005-11147-009?doi=1) have found that baseline avoidance coping was prospectively associated with both more chronic and more acute life stressors 4 years later.
 - We could've controlled for other factors like demographics, risk level, gender, etc.
 - BP may not perfectly represent the recovery from stress. BP typically starts decreasing within minutes, and it may take from a few minutes to several hours to normalize, depending on individual differences [(Mayo Clinic, 2021)](https://www.mayoclinic.org/diseases-conditions/high-blood-pressure/in-depth/stress-and-high-blood-pressure/art-20044190). The sampling duration of the BP in the original study may not be sufficient for the BP fo fully represent the stress recovery. 
