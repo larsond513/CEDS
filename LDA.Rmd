@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Set up 
 ## Data import
-```{r}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 library(rstudioapi)
 library(psych)
 library(deSolve)  
@@ -27,18 +27,25 @@ library(sdamr)
 library(lmtest)
 library(lavaan)
 library(car)
-<<<<<<< HEAD
 library(emmeans)
-=======
 
-packages <- c("afex", "lavaan", "lmtest")
-for (pkg in packages) {
+packages <- c(
+  "ggplot2", "nlme", "lme4", "zoo", "reshape2", "plyr", 
+  "dplyr", "afex", "tidyr", "sdamr", "lmtest", "lavaan", 
+  "car", "emmeans"
+)
+
+# Function to install packages if not already installed
+install_if_missing <- function(pkg) {
   if (!require(pkg, character.only = TRUE)) {
     install.packages(pkg, dependencies = TRUE)
     library(pkg, character.only = TRUE)
   }
 }
->>>>>>> 315f5abcb980847c0984a7157d1561a2aa104ee4
+
+# Install and load all required packages
+lapply(packages, install_if_missing)
+
 ```
 
 # Data pre-processing
@@ -259,7 +266,8 @@ anova(mod1_BP, mod4_BP) # theoretical model significantly better
 ## Examining the interaction (emm)
 ```{r}
 mod1 <- lme4::lmer(BP ~ time * supportive_coping + (1|ID), data=BP_long)
-mod1_emm <- emmeans(mod1, ~ time * supportive_coping)
+mod1_emm <- emmeans(mod1, ~ time * supportive_coping) # EMMs
+# Pairwise comparison
 mod1_pairwise <- pairs(mod1_emm, adjust = "Tukey")
 summary(mod1_pairwise)
 
@@ -343,3 +351,34 @@ qqnorm(random_effects)
 qqline(random_effects, col = "red")
 ```
 >>>>>>> 315f5abcb980847c0984a7157d1561a2aa104ee4
+
+
+## Linearity example
+```{r}
+# Load necessary libraries
+library(ggplot2)
+library(lme4)
+
+# Simulate data
+set.seed(123)
+n <- 100
+x <- rnorm(n)
+y <- 2 * x + rnorm(n)
+data <- data.frame(x = x, y = y)
+
+# Fit a linear model
+model <- lm(y ~ x, data = data)
+
+# Extract residuals and fitted values
+residuals <- resid(model)
+fitted_values <- fitted(model)
+
+# Create a Residuals vs. Fitted plot
+ggplot(data = data.frame(fitted = fitted_values, residuals = residuals), aes(x = fitted, y = residuals)) +
+  geom_point() +
+  geom_hline(yintercept = 0, col = "red") +
+  labs(title = "Residuals vs Fitted Values", x = "Fitted Values", y = "Residuals") +
+  theme_minimal()
+
+```
+
