@@ -349,15 +349,24 @@ shapiro.test(residuals)
 # 3. Homoscedasticity
 # Plot residuals vs. fitted values
 homoscedasticity_plot <- ggplot(data = data.frame(fitted = fitted_values, abs_residuals = abs(residuals)), aes(x = fitted, y = abs_residuals)) +
-  geom_point() +
-  geom_hline(yintercept = 0, col = "red") +
+  geom_point(size = 2) +  # Adjust point size for better visibility
+  geom_hline(yintercept = 0, col = "red", size = 1) +  # Adjust line size for better visibility
   labs(
-    title = "Figure 1b: Residuals vs. Predicated Plot to Assess Homoscedasticity",
+    title = "Figure 1b: Residuals vs. Predicted Plot to Assess Homoscedasticity",
     x = "Fitted values",
     y = "Absolute Residuals"
+  ) +
+  theme_minimal(base_size = 15) +  # Use a minimal theme with a larger base font size
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),  # Center and bold the plot title
+    axis.title = element_text(size = 16),  # Larger axis titles
+    axis.text = element_text(size = 14),  # Larger axis text
+    legend.title = element_text(size = 16),  # Larger legend title
+    legend.text = element_text(size = 14)  # Larger legend text
   )
+
 # Save the homoscedasticity plot
-ggsave("Figure/Homoscedascity.png", plot = homoscedasticity_plot, width = 720, height = 480, units = "px")
+ggsave("Figure/Homoscedascity.png", plot = homoscedasticity_plot, width = 10, height = 6, dpi = 300)
 
 # Breusch-Pagan test
 bptest(lm(residuals ~ fitted_values)) 
