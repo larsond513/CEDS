@@ -275,7 +275,7 @@ summary(mod1_pairwise)
 emm_df <- as.data.frame(mod1_emm)
 
 # Plot the interaction
-ggplot(emm_df, aes(x = time, y = emmean, color = supportive_coping, group = supportive_coping)) +
+emm_interaction <- ggplot(emm_df, aes(x = time, y = emmean, color = supportive_coping, group = supportive_coping)) +
   geom_line(size = 1.2) +  # Thicker lines
   geom_point(size = 3) +  # Larger points
   labs(
@@ -293,7 +293,7 @@ ggplot(emm_df, aes(x = time, y = emmean, color = supportive_coping, group = supp
   )
 
 # Save the plot with improved dimensions and resolution
-ggsave("Figure/Figure2.png", width = 10, height = 6, dpi = 300)
+ggsave("Figure/Figure2.png", plot = emm_interaction, width = 10, height = 6, dpi = 300)
 
 ```
 
@@ -409,9 +409,18 @@ qqline(random_effects, col = "red")
 # Create a data frame with the residuals and fitted values
 residuals_data <- data.frame(time = BP_long$time, residuals = residuals, ID = BP_long$ID)
 
-ggplot(data = residuals_data, aes(x = time, y = residuals, group = ID)) +
+residuals_overtime <- ggplot(data = residuals_data, aes(x = time, y = residuals, group = ID)) +
   geom_line() +
-  labs(title = "Residuals over Time", x = "Time", y = "Residuals")
+  labs(title = "Figure 5: Residuals over Time", x = "Time", y = "Residuals") +
+   theme_minimal(base_size = 15) +  # Use a minimal theme with a larger base font size
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),  # Center and bold the plot title
+    axis.title = element_text(size = 16),  # Larger axis titles
+    axis.text = element_text(size = 14),  # Larger axis text
+    legend.title = element_text(size = 16),  # Larger legend title
+    legend.text = element_text(size = 14)  # Larger legend text
+  )
+ggsave("Figure/Figure5.png", plot = residuals_overtime, width = 10, height = 6, dpi = 300)
 
 acf(residuals, main = "ACF of Residuals")
 
