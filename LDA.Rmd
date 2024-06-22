@@ -439,7 +439,7 @@ mod1_BP_ar1 <- lme(BP ~ time * supportive_coping, random = ~ 1 | ID, correlation
 summary(mod1_BP_ar1)
 
 anova(mod1_BP, mod1_BP_ar1, mod1_BP_poly)
-AIC(mod1_BP, mod1_BP_ar1, mod1_BP_poly)
+#AIC(mod1_BP, mod1_BP_ar1, mod1_BP_poly)
 ```
 
 
