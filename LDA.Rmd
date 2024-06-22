@@ -275,17 +275,25 @@ summary(mod1_pairwise)
 emm_df <- as.data.frame(mod1_emm)
 
 # Plot the interaction
-interaction_plot <- ggplot(emm_df, aes(x = time, y = emmean, color = supportive_coping, group = supportive_coping)) +
-  geom_line() +
-  geom_point() +
+ggplot(emm_df, aes(x = time, y = emmean, color = supportive_coping, group = supportive_coping)) +
+  geom_line(size = 1.2) +  # Thicker lines
+  geom_point(size = 3) +  # Larger points
   labs(
     title = "Interaction Plot of Time and Supportive Coping on BP",
     x = "Time",
-    y = "Estimated Marginal Mean of BP"
+    y = "Estimated Marginal Mean of BP",
+    color = "Supportive Coping"
   ) +
-  theme_minimal()
+  theme_minimal(base_size = 15) +  # Use a minimal theme with a larger base font size
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),  # Center and bold the plot title
+    axis.title = element_text(size = 16),  # Larger axis titles
+    legend.title = element_text(size = 16),  # Larger legend title
+    legend.text = element_text(size = 14)  # Larger legend text
+  )
 
-ggsave("Figure/Emmeans_interaction.png", plot = interaction_plot, width = 720, height = 480, units = "px")
+# Save the plot with improved dimensions and resolution
+ggsave("Figure/Emmeans_interaction.png", width = 10, height = 6, dpi = 300)
 
 ```
 
