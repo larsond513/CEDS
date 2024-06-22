@@ -275,7 +275,7 @@ summary(mod1_pairwise)
 emm_df <- as.data.frame(mod1_emm)
 
 # Plot the interaction
-ggplot(emm_df, aes(x = time, y = emmean, color = supportive_coping, group = supportive_coping)) +
+interaction_plot <- ggplot(emm_df, aes(x = time, y = emmean, color = supportive_coping, group = supportive_coping)) +
   geom_line() +
   geom_point() +
   labs(
@@ -284,6 +284,9 @@ ggplot(emm_df, aes(x = time, y = emmean, color = supportive_coping, group = supp
     y = "Estimated Marginal Mean of BP"
   ) +
   theme_minimal()
+
+ggsave("Figure/Emmeans_interaction.png", plot = interaction_plot, width = 720, height = 480, units = "px")
+
 ```
 
 ## Examining the interaction (categorisation)
@@ -327,18 +330,26 @@ ggplot(data = data.frame(fitted = fitted_values, residuals = residuals), aes(x =
 
 # 2. Normality of Residuals
 # Q-Q plot of residuals
-qqnorm(residuals, main="Figure 1a: Q-Q Plot of Residuals to Assess Normality") 
+png(file = "Figure/normality.png", width = 720, height = 480)
+qqnorm(residuals, main="Figure 1a: Q-Q Plot of Residuals to Assess Normality")
+qqline(residuals, col = "red")
+dev.off()
 
 # Shapiro-Wilk test for normality
 shapiro.test(residuals)
 
 # 3. Homoscedasticity
 # Plot residuals vs. fitted values
-ggplot(data = data.frame(fitted = fitted_values, abs_residuals = abs(residuals)), aes(x = fitted, y = abs_residuals)) +
+homoscedasticity_plot <- ggplot(data = data.frame(fitted = fitted_values, abs_residuals = abs(residuals)), aes(x = fitted, y = abs_residuals)) +
   geom_point() +
   geom_hline(yintercept = 0, col = "red") +
-  labs(title = "Scale-Location Plot", x = "Fitted values", y = "Absolute Residuals")+
-  ggtitle("Figure 1b: Residuals vs. Predicated Plot to Assess Homoscedasticity")
+  labs(
+    title = "Figure 1b: Residuals vs. Predicated Plot to Assess Homoscedasticity",
+    x = "Fitted values",
+    y = "Absolute Residuals"
+  )
+# Save the homoscedasticity plot
+ggsave("Figure/Homoscedascity.png", plot = homoscedasticity_plot, width = 720, height = 480, units = "px")
 
 # Breusch-Pagan test
 bptest(lm(residuals ~ fitted_values)) 
