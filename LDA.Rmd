@@ -352,8 +352,31 @@ qqline(random_effects, col = "red")
 ```
 >>>>>>> 315f5abcb980847c0984a7157d1561a2aa104ee4
 
+### non-linearity and auto correlation in residuals
+```{r}
+# Create a data frame with the residuals and fitted values
+residuals_data <- data.frame(time = BP_long$time, residuals = residuals, ID = BP_long$ID)
 
-## Linearity example
+ggplot(data = residuals_data, aes(x = time, y = residuals, group = ID)) +
+  geom_line() +
+  labs(title = "Residuals over Time", x = "Time", y = "Residuals")
+
+acf(residuals, main = "ACF of Residuals")
+
+pacf(residuals, main = "PACF of Residuals")
+
+
+mod1_BP_poly <- afex::mixed(BP ~ poly(time, 2) * supportive_coping + (1|ID), set_data_arg = TRUE, check_contrasts = FALSE, data = BP_long)
+summary(mod1_BP_poly)
+mod1_BP_ar1 <- lme(BP ~ time * supportive_coping, random = ~ 1 | ID, correlation = corAR1(), data = BP_long)
+summary(mod1_BP_ar1)
+
+anova(mod1_BP, mod1_BP_ar1, mod1_BP_poly)
+AIC(mod1_BP, mod1_BP_ar1, mod1_BP_poly)
+```
+
+
+### Linearity example
 ```{r}
 # Load necessary libraries
 library(ggplot2)
